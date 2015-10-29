@@ -3,6 +3,8 @@ development:
   encoding: utf8
   reconnect: false
   pool: 5
+  host: localhost
+  database: rendezvous
   url: <%= ENV['DATABASE_URL'] %>
 
 test:
@@ -11,7 +13,7 @@ test:
   reconnect: false
   pool: 5
   host: localhost
-  database: rendezvous_test
+  database: rendezvous
   username: travis
   password:
 
