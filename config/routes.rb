@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   get 'tags/:name/events'                   => 'tags#events',          as: 'event_tag'
 
-  root 'welcome#top',                                                  as: 'root'
+  root 'user/base#top'
 
   get 'stock'                               => 'stock#show',           as: 'stock'
   get 'flow'                                => 'flow#show',            as: 'flow'
@@ -29,15 +29,6 @@ Rails.application.routes.draw do
   post 'tags/:name/move_to/:move_to_name'   => 'tags#move_to',         as: 'move_to_tag'
   resources :tags, param: :name, except: [:index]
 
-  devise_for :users,
-             controllers: {
-               omniauth_callbacks: 'users/omniauth_callbacks',
-               registrations: 'users/registrations'
-             },
-             skip: [
-               :passwords,
-               :registrations
-             ]
-
+  devise_for :users, :controllers => { :sessions => "devise/sessions" }
   resource :user
 end

@@ -67,7 +67,7 @@ group :development do
   gem 'pry-rails'
 
   # profiler
-  gem 'rack-mini-profiler'
+  gem 'rack-mini-profiler', require: false
 
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
@@ -169,3 +169,5 @@ gem 'meta-tags'
 # Growl-like Notification
 # https://github.com/RobinBrouwer/gritter
 gem 'gritter', '1.1.0'
+
+gem 'slim-rails'

@@ -19,7 +19,7 @@ html lang="ja"
   body class="rails-#{params[:controller]}-#{params[:action]}"
     = gflash
     .body-padding
-        - if params[:controller] != 'welcome'
+        - if params[:controller] != 'devise/sessions' && params[:controller] != 'devise/registrations'
           = render partial: 'partials/app_header'
         .container-fluid.container-main#yield
           = yield

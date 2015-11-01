@@ -13,9 +13,9 @@ test:
   reconnect: false
   pool: 5
   host: localhost
-  database: rendezvous
-  username: travis
-  password:
+  database: rendezvous_test
+  username: testuser
+  password: testpassword
 
 production:
   adapter: mysql2

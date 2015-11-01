@@ -1,2 +1,2 @@
 --color
--r turnip/rspec
+--require spec_helper

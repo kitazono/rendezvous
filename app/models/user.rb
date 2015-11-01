@@ -30,7 +30,6 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  devise :omniauthable, omniauth_providers: [:google_oauth2]
 
   ######################################################################
   # Associations
@@ -61,58 +60,16 @@ class User < ActiveRecord::Base
   ######################################################################
   # Validations
   ######################################################################
-  validates :name, presence: true
+  # validates :name, presence: true
   validates :email, presence: true
   validates :email, uniqueness: true
-  validates :nickname, presence: true
-  validates :nickname, format: { with: /\A[0-9A-Za-z]+\z/i }
-  validates :nickname, uniqueness: true
-
-  # Device
-  def self.find_for_google_oauth2(access_token, _signed_in_resource = nil)
-    user = where(email: access_token.info['email']).first_or_create do |u|
-      u.name = access_token.info['name']
-      u.image_url = access_token.info['image']
-      u.password = Devise.friendly_token[0, 20]
-      u.nickname = (('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a).shuffle[0..4].join
-    end
-
-    user.google_auth_token = access_token.credentials['token'] if access_token.credentials['token']
-    user.google_refresh_token = access_token.credentials['refresh_token'] if access_token.credentials['refresh_token']
-    user.google_token_expires_at = Time.at(access_token.credentials['expires_at']) if access_token.credentials['expires_at']
-    user.save!
-
-    user
-  end
+  # validates :nickname, presence: true
+  # validates :nickname, format: { with: /\A[0-9A-Za-z]+\z/i }
+  # validates :nickname, uniqueness: true
 
   ######################################################################
   # instance methods
   ######################################################################
-
-  # check if google oauth token is expired
-  def google_oauth_token_expired?
-    google_token_expires_at < Time.now
-  end
-
-  # refresh google oauth token
-  def google_oauth_token_refresh!
-    conn = Faraday.new(url: 'https://accounts.google.com') do |builder|
-      builder.request :url_encoded
-      builder.adapter :net_http
-    end
-    response = conn.post '/o/oauth2/token',
-                         client_id: Settings.google_api.client_id,
-                         client_secret: Settings.google_api.secret,
-                         refresh_token: google_refresh_token,
-                         grant_type: 'refresh_token'
-
-    res_json = JSON.parse(response.body)
-
-    update_attributes(
-      google_auth_token: res_json['access_token'],
-      google_token_expires_at: Time.now + res_json['expires_in'].seconds
-    )
-  end
 
   # push通知を追加
   def push_notification(detail_path, body)
